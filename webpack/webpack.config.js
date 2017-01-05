@@ -38,22 +38,21 @@ var configuration =
 
 	module:
 	{
-		loaders: 
+		rules: 
 		[
-			{
-				test   : /\.json$/,
-				loader : 'json-loader'
-			},
 			{
 				test    : /\.js$/,
 				// include: [path.resolve(root_folder, 'code')],
 				// exclude: path.resolve(root_folder, 'node_modules'),
 				exclude: /node_modules/,
-				loader: 'babel-loader'
+				use:
+				[{
+					loader: 'babel-loader'
+				}]
 			},
 			{
 				test    : /\.scss$/,
-				loaders : 
+				use : 
 				[
 					'style-loader',
 					'css-loader?importLoaders=2&sourceMap',
@@ -63,7 +62,7 @@ var configuration =
 			},
 			{
 				test    : /\.(jpg|png)$/,
-				loaders : 
+				use : 
 				[
 					'url-loader?limit=10000' // Any png-image or woff-font below or equal to 10K will be converted to inline base64 instead
 				]
@@ -71,9 +70,34 @@ var configuration =
 		]
 	},
 
-	postcss: () => [autoprefixer({ browsers: 'last 2 version' })],
-
 	plugins: []
 }
+
+configuration.plugins.push
+(
+	new webpack.LoaderOptionsPlugin
+	({
+		test: /\.scss$/,
+		debug: true,
+		options:
+		{
+			// A temporary workaround for `scss-loader`
+			// https://github.com/jtangelder/sass-loader/issues/298
+			output:
+			{
+				path: configuration.output.path
+			},
+
+			postcss:
+			[
+				autoprefixer({ browsers: 'last 2 version' })
+			],
+
+			// A temporary workaround for `css-loader`.
+			// Can also supply `query.context` parameter.
+			context: configuration.context
+		}
+	})
+)
 
 module.exports = configuration

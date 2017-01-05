@@ -1,5 +1,4 @@
-This boilerplate illustrates isomorphic (universal) Webpack rendering using React.
-Forked from https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example
+This sample project illustrates isomorphic (universal) Webpack rendering using React.
 
 Features
 
@@ -7,8 +6,10 @@ Features
 * React-router
 * Redux
 * Isomorphic (universal) rendering
-* Webpack
+* Webpack 2
 * Development mode: hot reload for React components, hot reload for Redux reducers
+
+*Small Advertisement:* 📞 if you're looking for a React phone number component check out [`react-phone-number-input`](http://halt-hammerzeit.github.io/react-phone-number-input/)
 
 Quick Start
 ===========
@@ -24,46 +25,28 @@ Quick Start
 * go to `http://localhost:3000`
 * interact with the production version of the web application
 
-Webpack 2 (beta)
+Motivation
+==========
+
+In summer 2015 I wrote [`webpack-isomorphic-tools`](https://github.com/halt-hammerzeit/webpack-isomorphic-tools) to make isomorphic (universal) React rendering work on server-side when the project was built with Webpack.
+
+The goal was met and many people started using it to implement isomorphic (universal) rendering in their apps.
+
+Still it lacked some funky Webpack features like variuos Webpack plugins and other edge cases.
+
+So I did some research on Webpack builds for Node.js and came up with a proof-of-concept solution which I now decided to publish as a library called [universal-webpack](https://github.com/halt-hammerzeit/universal-webpack). This sample project is a demonstration of using `universal-webpack`.
+
+Webpack 2
 ================
 
-This project installs Webpack v1 by default. And it also works with the latest beta of Webpack 2 (`25` at the time of writing).
+This project requires Webpack 2
 
-The only change required is to remove `postcss` from the configuration and add `LoaderOptionsPlugin` instead:
-
-```js
-configuration.plugins.push
-(
-	new webpack.LoaderOptionsPlugin
-	({
-		test: /\.scss$/,
-		options:
-		{
-			// A temporary workaround for `scss-loader`
-			// https://github.com/jtangelder/sass-loader/issues/298
-			output:
-			{
-				path: configuration.output.path
-			},
-
-			postcss: [autoprefixer({ browsers: 'last 2 version' })],
-
-			// A temporary workaround for `css-loader`.
-			// Can also supply `query.context` parameter.
-			context: configuration.context
-		}
-	})
-)
+```sh
+npm install webpack@2.2.0-rc.3
 ```
 
-`LoaderOptionsPlugin` seems to have additional options that might be configured possibly by adding a second instance of the same plugin:
+I've been using Webpack 1 for a long time here while Webpack 2 was in beta. Now the time has come to move to Webpack 2 since it's [almost ready to be released](https://github.com/webpack/webpack/milestone/10).
 
-```js
-// For production mode
-// https://moduscreate.com/webpack-2-tree-shaking-configuration/
-new webpack.LoaderOptionsPlugin
-({
-	minimize: true,
-	debug: false
-})
-```
+See [Webpack 1 to 2 migration notes](https://webpack.js.org/guides/migrating/)
+
+See older versions of this repo for Webpack 1 compatibility.

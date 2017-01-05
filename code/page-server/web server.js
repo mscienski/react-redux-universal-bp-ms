@@ -18,7 +18,7 @@ export default function(parameters)
 		//
 		// Also a website "favicon".
 		//
-		assets: (url) =>
+		assets(url)
 		{
 			// Retrieve asset chunk file names
 			// (which are output by client side Webpack build)
@@ -29,7 +29,7 @@ export default function(parameters)
 
 			// Clear Webpack require() cache for hot reload in development mode
 			// (this is not necessary)
-			if (_development_)
+			if (process.env.NODE_ENV !== 'production')
 			{
 				delete require.cache[require.resolve('../../assets/images/icon/cat_64x64.png')]
 			}
@@ -53,14 +53,15 @@ export default function(parameters)
 			// Will be inserted into server rendered webpage <head/>
 			// (this `head()` function is optional and is not required)
 			// (its gonna work with or without this `head()` parameter)
-			head: (url) =>
+			head(url)
 			{
-				if (_development_)
+				if (process.env.NODE_ENV !== 'production')
 				{
 					// `devtools` just tampers with CSS styles a bit.
 					// It's not required for operation and can be omitted.
+					// It just removes the "flash of unstyled content" in development mode.
 					const script = devtools({ ...parameters, entry: 'main' })
-					return <script dangerouslySetInnerHTML={{ __html: script }}/>
+					return `<script>${script}</script>`
 				}
 			}
 		}
